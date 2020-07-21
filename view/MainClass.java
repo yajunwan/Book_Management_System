@@ -1,20 +1,32 @@
 package view;
 
 import object.Book;
+import tool.IO;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainClass{
-    public ArrayList<Book> booklist = new ArrayList<Book>();
-    public int count = 0;
+    public static ArrayList<Book>booklist = new ArrayList<Book>();
+    public static int count = 0;
+    public static int INPUTFILE = 0;
+    public static int OUTPUTFILE = 1;
+    public boolean parseFile = false;
 
-    public MainClass(){
+    public MainClass(String inputF,String outputF){
         Scanner input = new Scanner(System.in);
+        IO io  = new IO();
+        if (inputF.length()>1){
+            io.loadFile(this, inputF);
+            parseFile = true;
+        }
         mainPage();
         while(true){
             int choice = input.nextInt();
             if (choice == 5){
+                if (parseFile){
+                    io.writeToFile(this, outputF);
+                }
                 System.out.println("Successfully exited the system, thanks for using");
                 break;
             }
@@ -33,6 +45,7 @@ public class MainClass{
                 continue;
             }
         }
+        input.close();
     }
     private void mainPage(){
         System.out.println("Welcome to the book management system");
@@ -67,7 +80,7 @@ public class MainClass{
         }else if (c == 2){
             mainPage();
         }
-
+        input.close();
     }
 
     private void deleteBook(){
@@ -116,6 +129,7 @@ public class MainClass{
                 System.out.println("Invalid input");
             }
         }
+        input.close();
     }
 
     private void changeBook(){
@@ -173,6 +187,7 @@ public class MainClass{
                 System.out.println("Invalid input");
             }
         }
+        input.close();
     }
 
     private void findBook(){
@@ -218,6 +233,7 @@ public class MainClass{
                 System.out.println("Invalid input");
             }
         }
+        input.close();
     }
 
     void showAllBook(){
@@ -227,7 +243,14 @@ public class MainClass{
         }
     }
     public static void main(String[]args){
-        MainClass start = new MainClass();
+        //
+        if (args.length>1){
+           String inputfile = args[INPUTFILE];
+           String outputfile = args[OUTPUTFILE];
+           new MainClass(inputfile,outputfile); 
+        }else{
+           new MainClass("","");
+        }
     }
 }
 
